@@ -53,6 +53,9 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   // to prevent from jumping without smooth scroll
   e.preventDefault();
 
+  // const clicked = e.target.closest('.nav__link')
+  // if (!clicked) return  /* alternative for matching */
+  
   if (e.target.classList.contains('nav__link')) {
     const id = e.target.getAttribute('href');
     const section = document.querySelector(id).getBoundingClientRect();
@@ -63,4 +66,28 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
       behavior: 'smooth',
     });
   }
+});
+
+/////////////////////////////////////////////
+// Operations tabs and contents
+
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+tabsContainer.addEventListener('click', function (e) {
+  // e.target can be either button or span -> closest() 
+  const clicked = e.target.closest('.operations__tab');
+  if (!clicked) return;
+
+  tabs.forEach((tab) => tab.classList.remove('operations__tab--active'));
+  clicked.classList.add('operations__tab--active');
+
+  tabsContent.forEach((content) =>
+    content.classList.remove('operations__content--active')
+  );
+
+  let id = clicked.dataset.tab;
+  const content = document.querySelector(`.operations__content--${id}`);
+  content.classList.add('operations__content--active');
 });

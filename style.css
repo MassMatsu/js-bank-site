@@ -280,7 +280,7 @@ h4 {
 }
 
 .operations__content {
-  /* display: none; */
+  display: none;
 
   /* JUST PRESENTATIONAL */
   font-size: 1.7rem;
