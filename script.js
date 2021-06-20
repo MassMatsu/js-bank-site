@@ -55,7 +55,7 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 
   // const clicked = e.target.closest('.nav__link')
   // if (!clicked) return  /* alternative for matching */
-  
+
   if (e.target.classList.contains('nav__link')) {
     const id = e.target.getAttribute('href');
     const section = document.querySelector(id).getBoundingClientRect();
@@ -76,7 +76,7 @@ const tabs = document.querySelectorAll('.operations__tab');
 const tabsContent = document.querySelectorAll('.operations__content');
 
 tabsContainer.addEventListener('click', function (e) {
-  // e.target can be either button or span -> closest() 
+  // e.target can be either button or span -> closest()
   const clicked = e.target.closest('.operations__tab');
   if (!clicked) return;
 
@@ -94,25 +94,65 @@ tabsContainer.addEventListener('click', function (e) {
 
 ////////////////////////////////////////////
 // mouseover ivent
-const nav = document.querySelector('.nav')
+const nav = document.querySelector('.nav');
 
 function handleHover(e) {
   if (e.target.classList.contains('nav__link')) {
-    const link = e.target
-    const siblings = link.closest('.nav').querySelectorAll('.nav__link')
+    const link = e.target;
+    // select elements from link to nav
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    console.log(link.closest('.nav'))
 
-    const logo = link.closest('.nav')
-      .querySelector('img')
+    const logo = link.closest('.nav').querySelector('img');
 
     siblings.forEach((sibling) => {
       if (sibling !== link) {
-        sibling.style.opacity = this
+        sibling.style.opacity = this;
       }
-    })
-    logo.style.opacity = this
+    });
+    logo.style.opacity = this;
   }
 }
 
-nav.addEventListener('mouseover', handleHover.bind(0.5))
-nav.addEventListener('mouseout', handleHover.bind(1))
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+nav.addEventListener('mouseout', handleHover.bind(1));
 
+////////////////////////////////////
+// Sticky navigation
+// const initialCoords = section1.getBoundingClientRect();
+
+// window.addEventListener('scroll', function () {
+//   if (window.scrollY > initialCoords.top) nav.classList.add('sticky');
+//   else nav.classList.remove('sticky');
+// });
+
+const header = document.querySelector('.header')
+const navHeight = nav.getBoundingClientRect().height
+
+const stickyNav = function(entries) {
+  const [entry] = entries
+  if (!entry.isIntersecting) nav.classList.add('sticky')
+  else nav.classList.remove('sticky')
+}
+
+const headerObserver = new IntersectionObserver(stickyNav, {root: null, threshold: 0, rootMargin: `-${navHeight}px`})
+headerObserver.observe(header)
+
+//////////////////////////////////////////
+// Reveal sections
+const allSections = document.querySelectorAll('section')
+
+const revealSection = function(entries, observer) {
+  const [entry] = entries
+  console.log(entry)
+  if (!entry.isIntersecting) return
+  entry.target.classList.remove('section--hidden')
+  observer.unobserve(entry.target)
+}
+
+const sectionObserver = new IntersectionObserver(revealSection, {root: null, threshold: 0.15})
+
+allSections.forEach((section) => {
+  sectionObserver.observe(section)
+  section.classList.add('section--hidden')
+})
